@@ -1,12 +1,7 @@
 import jquery from "jquery";
 import "../index.less"
 window.$ = jquery;
-// let LinkChoose = function(){
-
-// }
-// LinkChoose.prototype.init=function(){
-//     console.log(this,13131);
-// }
+//以上是webpack使用   无用可删
 class LinkChoose{
     constructor(options){
         this.options = options;
@@ -71,7 +66,7 @@ class LinkChoose{
      */
     _itemClick(self){
         let $this = self;
-        let index = $this.parent().index();
+        let index = $this.parent().LinkChookse();
         let checkBox = $this.parent().attr('checkbox');
         let key = $this.attr('key');
         this.parentIndex = index;
@@ -83,7 +78,6 @@ class LinkChoose{
                 this.val[index].forEach((_item,_index)=>{
                     if (_item.key === key)
                     {
-
                         this.val[index].splice(_index,1);
                         haskey = true;
                         return ;
@@ -126,7 +120,7 @@ class LinkChoose{
      */
     _tabsClick(self){
         $('.link-list-box').css({
-            transform:`translateX(calc(-${self.index()}*50vw))`
+            transform:`translateX(calc(-${self.LinkChookse()}*50vw))`
         })
         self.addClass('span-active').siblings().removeClass('span-active');
     }
@@ -196,7 +190,7 @@ class LinkChoose{
         let linkList = children.map((item,index)=>{
             let linkItem = '';
             item.item.forEach((it,ind)=>{
-                linkItem += `<li class="link-item" data-parentIndex=${ind} key=${it.key}>${it.title}</li>`
+                linkItem += `<li class="link-item" data-parentIndex=${index} key=${it.key}>${it.title}</li>`
             })
             return `<ul class="link-list" checkbox="${item.checkbox?1:0}" >
                                     ${linkItem}
@@ -239,6 +233,7 @@ class LinkChoose{
      */
     _updateRenderList(children){
         let list = "";
+        console.log(children);
         children.forEach((item,index)=>{
             let isactive = false;
             if(this.val[this.parentIndex+1]){
@@ -272,8 +267,11 @@ class LinkChoose{
                 $('.link-list-box').append(renderlist);
                 $(".link-tabs").append(`<span >${children[0].title}</span>`)
             }else if(children !== undefined && isUpdate == 1){
-                $('.link-list-box .link-list').eq(this.parentIndex+1).html(this._updateRenderList(children))
+                $(".link-tabs span").eq(this.parentIndex+1).html(children[0].title);
+                $('.link-list-box .link-list').eq(this.parentIndex+1).attr('checkbox',children[0].checkbox?1:0).html(this._updateRenderList(children[0].item))
             }
+        $(".link-tabs span").eq(this.parentIndex+1).nextAll().remove();
+        $('.link-list-box .link-list').eq(this.parentIndex+1).nextAll().remove()
     }
     /**
      * @Author: Training
@@ -300,99 +298,78 @@ class LinkChoose{
 $.fn.LinkChoose =  function(options){
     return new LinkChoose(options);
 };
+
+/************************************************************华丽的分割线****************************************************************************************/
+
 /**
  * @Author: Training
  * @desc 测试代码
  * @props none
  */
-let link = $(this).LinkChoose({
-    title:"请选择",
-    children:[
-        {
-            checkbox:true,//多选
-            title:"国家",
-            item:[
-                {
-                    title:"选项1",
-                    key:'1'
-                },
-                {
-                    title:"选项2",
-                    key:'2'
-                },
-                {
-                    title:"选项3",
-                    key:'3'
-                },
-            ]
-        }
-    ]
-});
-let ins = 1;
-link.itemClick=async function(self){
-    console.log(self);
-    $('.select').html(link.getValHtml());
-    if (ins <= 3){
-       let  child = [
-            {
-                checkbox:false,//多选
-                title:"省市"+link.parentIndex,
-                item:[
-                    {
-                        title:"选项3",
-                        key:'1'
-                    },
-                    {
-                        title:"选项4",
-                        key:'2'
-                    },
-                    {
-                        title:"选项5",
-                        key:'3'
-                    },
-                ]
-            }
-        ];
-        link.updateChildren(child,0);
-    }else{
-        let  child =
-                [
-                    {
-                        title:"选项1",
-                        key:'1'
-                    },
-                    {
-                        title:"选项2",
-                        key:'2'
-                    },
-                    {
-                        title:"选项3",
-                        key:'3'
-                    },
-                    {
-                        title:"选项4",
-                        key:'4'
-                    },
-                    {
-                        title:"选项5",
-                        key:'5'
-                    },
-                    {
-                        title:"选项6",
-                        key:'6'
-                    },
-                ]
-        link.updateChildren(child,1);
+function getData() {
+  let data;
+  $.ajax({
+    url:"https://api.github.com/search/repositories?q=java",
+    async:false,
+    type:"get",
+    success(res){
+      data =  res;
     }
-    ins++;
+  });
+  let data_json = [];
+  data.items.forEach((item,index)=>{
+    data_json.push({key:item.id,title:item.full_name})
+  });
+  console.log(data_json);
+  return data_json;
 }
+;
+let link = $(this).LinkChoose({
+  title:"请选择",
+  children:[
+    {
+      checkbox:true,//多选
+      title:"国家",
+      item:getData()
+    }
+  ]
+});
+let parentid = null;
+let data = [];
+link.itemClick=async function(self){
+  if (parentid == null ||  parentid!==self.parent().LinkChookse()){
+    $.ajax({
+      url:"https://api.github.com/repos/"+self.html()+"/assignees",
+      async:false,
+      success(res) {
+        res.forEach((item,index)=>{
+          data.push({key:item.id,title:item.node_id})
+        })
+      }
+    })
+    let  child = [
+      {
+        checkbox:false,//多选
+        title:"省市"+link.parentIndex,
+        item:data
+      }
+    ];
+    link.updateChildren(child,0);
+    parentid = self.parent().LinkChookse();
+  }else{
+    let  child = [
+      {
+        checkbox:true,//多选
+        title:"省__市"+link.parentIndex,
+        item:data
+      }
+    ];
+    link.updateChildren(child,1)
+  }
+};
 $('.select').click(function(){
-    link.show();
-    console.log($(this));
-})
-
-
-
+  link.show();
+});
 
 
 

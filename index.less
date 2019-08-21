@@ -1,4 +1,4 @@
-body,html,div,ul,li,p,span{
+body,html,div,ul,table,th,td,tr,li,p,span{
     margin: 0;
     padding: 0;
     font-size: 14px;
@@ -97,4 +97,25 @@ li{
             }
         }
     }
+}
+.t-sku-table{
+  table{
+    width: 100%;
+    //border: 1px solid #ccc;
+    thead{
+      th{
+        border-bottom: 1px solid #ccc;
+      }
+    }
+    tbody{
+      td{
+        text-align: center;
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+      td:last-child{
+        //border-right: none;
+      }
+    }
+  }
 }

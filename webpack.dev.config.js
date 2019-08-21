@@ -1,8 +1,11 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
-    entry:"./src/index.js",             //入口文件
+    mode:"development",
+  devtool: "cheap-module-eval-source-map",
+  entry:"./index.js",             //入口文件
     output:{
+        // publicPath: "https://localhost/api/"   //文件的共有域名   会在文件引入的原始位置前添加
         path:__dirname,
         filename:"./release/bundle.js"
     },
@@ -33,7 +36,7 @@ module.exports = {
     devServer:{
         host:"localhost",
         contentBase:path.join(__dirname,'./release'),
-        open:true,
-        port:9000
+        open:false,
+        port:9001
     }
 }

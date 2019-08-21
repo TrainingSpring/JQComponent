@@ -4,11 +4,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<!--  <link rel="stylesheet" href="./index.css" />-->
     <title>Document</title>
 </head>
 <body>
     <div class="select">
         点击弹出选择框
     </div>
+    <div id="app">
+<!--      {{options}}-->
+      <div class="t-sku" v-for="(option,index) in options" >
+        <div class="t-sku-title">
+          {{option.title}}
+        </div>
+        <div class="t-sku-option">
+          <label v-for="(item,i) in option.items" :for="item.name">
+            <input
+              @change="checkChange($event,{index,title:option.title,name:option.name,item:{...item,index:i}})"
+              type="checkbox"
+              :value="item.name"
+              :id="item.name">
+            {{item.label}}
+          </label>
+        </div>
+      </div>
+      <div class="t-sku-table">
+        <table>
+          <thead>
+            <tr>
+              <th v-for="item in thead">{{item.title}}</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr v-for="item in tbody">
+            <td v-for="_item in item">{{_item}} </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="t-sku-send">
+      <button onclick="sku.getData()">发送</button>
+    </div>
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+      function Sku(props){
+        let self = this;
+        this.el = "#app";
+        this.data = {
+          options:[
+            {
+              title:"颜色分类",
+              name:"color",
+              items:[
+                {
+                  label:"军绿色",
+                  name:"green",
+                },
+                {
+                  label:"花色",
+                  name:"flower",
+                },
+                {
+                  label:"蓝色",
+                  name:"blue",
+                },
+                {
+                  label:"黄色",
+                  name:"yellow",
+                },
+              ]
+            },
+            {
+              title:"尺寸",
+              name:"size",
+              items:[
+                {
+                  label:"41",
+                  name:"41"
+                },
+                {
+                  label:"31",
+                  name:"31"
+                },
+                {
+                  label:"42",
+                  name:"42"
+                },
+              ]
+            }
+          ]
+        }
+        this.vm = new Vue({
+          el:self.el,
+          data:{
+            ...self.data,
+            selected:[],
+            tbody:[],
+            table:{
+              tr:[
+                [{label:"红色",name:"red"},{label:"绿色",name:"green"}],
+                [{label:"32",name:"32"},{label:"41",name:"41"}]
+              ]
+            }
+          },
+          mounted(){
+          },
+          watch:{
+            tbody(o,t){
+              console.log(o, t,"watch");
+            }
+          },
+          computed:{
+            thead(){
+              let o = this.options;
+              let temp = [];
+              o.forEach((item,index)=>{
+                temp[index] = {title:item.title,name:item.name};
+              });
+              return temp;
+            }
+          },
+          methods:{
+            checkChange(e,{index,title,name,item}){
+              let checked = e.target.checked;
+              this.countTbody(checked,index,title,name,item);
+              if (this.selected[name]) {
+                this.selected[name][item.name] = checked;
+              }else{
+                this.selected[name] = {};
+                this.selected[name][item.name] = checked;
+              }
+            },
+            countTbody(checked,index,title,name,item){
+
+              /*if (checked) {
+                this.tbody[index] = [{title:item.label,name:item.name}];
+                console.log(this.tbody);
+              }*/
+              this.tbody[0] = ([{title:"你猜"}])
+            }
+          }
+        });
+        Object.assign(this,props);
+        return this;
+      }
+      Sku.prototype.getData = function () {
+        let d = this.vm.$data.selected;
+        let temp = [];
+        for (let i in d) {
+          temp[i] =  [];
+          for (let j in d[i]){
+            if (d[i][j]) {
+              temp[i].push(j)
+            }
+          }
+        }
+        console.log(temp);
+        return temp;
+      };
+      window.sku = new Sku();
+    </script>-->
 </body>
+
 </html>
