@@ -4,6 +4,7 @@ module.exports = {
     mode:"development",
   devtool: "cheap-module-eval-source-map",
   entry:"./index.js",             //入口文件
+  resolve: { alias: { vue: 'vue/dist/vue.esm.js' } },
     output:{
         // publicPath: "https://localhost/api/"   //文件的共有域名   会在文件引入的原始位置前添加
         path:__dirname,

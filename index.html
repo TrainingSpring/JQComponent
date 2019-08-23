@@ -11,8 +11,12 @@
     <div class="select">
         点击弹出选择框
     </div>
-    <div id="app">
-<!--      {{options}}-->
+    <div key="test" id="test" style="background-color: white">
+      {{message}}
+      <itest @testEvent="tEvent($event)"></itest>
+    </div>
+   <!-- <div id="app">
+&lt;!&ndash;      {{options}}&ndash;&gt;
       <div class="t-sku" v-for="(option,index) in options" >
         <div class="t-sku-title">
           {{option.title}}
@@ -42,7 +46,7 @@
           </tbody>
         </table>
       </div>
-    </div>
+    </div>-->
     <div class="t-sku-send">
       <button onclick="sku.getData()">发送</button>
     </div>
